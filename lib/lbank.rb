@@ -15,7 +15,9 @@ module Lbank
       url   = "#{SOURCE}?Y=%i&M=%i&D=%i&S=csv" % [ date.year, date.month, date.day ]
       rates = {}
 
-      CSV.parse(open(url)).each do |row|
+      data  = open(url).read
+
+      CSV.parse(data).each do |row|
         rates[row[1]] = row[2].to_i / row[3].to_f
       end
 
