@@ -1,6 +1,6 @@
 # Lbank
 
-[![Build Status](https://travis-ci.org/laurynas/lbank.png)](http://travis-ci.org/laurynas/lbank)
+[![Build Status](https://secure.travis-ci.org/laurynas/lbank.png)](http://travis-ci.org/laurynas/lbank)
 
 Fetches currency rates from Lithuanian Central Bank website http://lbank.lt.
 Does currency conversion.
