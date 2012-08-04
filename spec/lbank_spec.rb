@@ -13,10 +13,16 @@ describe Lbank do
 
     date = Date.new(2012, 8, 4)
 
-    subject.convert_currency(10, 'LTL', 'EUR', date).round(2).should == 2.90
-    subject.convert_currency(10, 'LTL', 'USD', date).round(2).should == 3.55
-    subject.convert_currency(100, 'RUB', 'LTL', date).round(2).should == 8.68
-    subject.convert_currency(100, 'RUB', 'USD', date).round(2).should == 3.08
+    round(subject.convert_currency(10, 'LTL', 'EUR', date)).should == 2.90
+    round(subject.convert_currency(10, 'LTL', 'USD', date)).should == 3.55
+    round(subject.convert_currency(100, 'RUB', 'LTL', date)).should == 8.68
+    round(subject.convert_currency(100, 'RUB', 'USD', date)).should == 3.08
+  end
+
+  private
+
+  def round(number, precision = 2)
+    ("%.#{precision}f" % number).to_f
   end
 
 end
