@@ -1,18 +1,23 @@
 require "lbank/version"
 require 'open-uri'
 require 'csv'
+require 'active_support/time'
 
 module Lbank
 
   BASE_CURRENCY = 'LTL'
+  TIMEZONE      = 'Europe/Vilnius'
   SOURCE        = 'http://lbank.lt/exchange/Results.asp'
+
   @@cache       = {}
 
-  def self.currency_rates(date = nil)
-    date  ||= Date.today
+  def self.currency_rates(time = nil)
+    time      ||= Time.now
+    bank_time = time.to_time.in_time_zone(TIMEZONE)
+    date      = [ bank_time.year, bank_time.month, bank_time.day ]
 
     if @@cache[date].nil?
-      url   = "#{SOURCE}?Y=%i&M=%i&D=%i&S=csv" % [ date.year, date.month, date.day ]
+      url   = "#{SOURCE}?Y=%i&M=%i&D=%i&S=csv" % date
       rates = {}
 
       data  = open(url).read
