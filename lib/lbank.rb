@@ -1,4 +1,5 @@
 require 'lbank/version'
+require 'lbank/memory_cache'
 require 'open-uri'
 require 'csv'
 require 'active_support/time'
@@ -9,14 +10,19 @@ module Lbank
   TIMEZONE      = 'Europe/Vilnius'
   SOURCE        = 'http://lbank.lt/exchange/Results.asp'
 
-  @@cache       = {}
+  module_function
 
-  def self.currency_rates(time = nil)
+  def cache
+    @cache ||= MemoryCache.new
+  end
+
+  def currency_rates(time = nil)
     time      ||= Time.now
     bank_time = time.to_time.in_time_zone(TIMEZONE)
     date      = [ bank_time.year, bank_time.month, bank_time.day ]
 
-    if @@cache[date].nil?
+
+    cache.fetch(cache_key(date)) do
       url   = "#{SOURCE}?Y=%i&M=%i&D=%i&S=csv" % date
       rates = {}
 
@@ -27,14 +33,11 @@ module Lbank
       end
 
       rates[BASE_CURRENCY] = 1.0
-
-      @@cache[date] = rates
+      rates
     end
-
-    @@cache[date]
   end
 
-  def self.convert_currency(amount, from_currency, to_currency,  date = nil)
+  def convert_currency(amount, from_currency, to_currency,  date = nil)
     rates     = self.currency_rates(date)
 
     from_rate = rates[from_currency.to_s]
@@ -43,4 +46,7 @@ module Lbank
     amount / from_rate * to_rate
   end
 
+  def cache_key(date)
+    "lbank-#{date.join('-')}"
+  end
 end
