@@ -1,4 +1,4 @@
-require "lbank/version"
+require 'lbank/version'
 require 'open-uri'
 require 'csv'
 require 'active_support/time'
