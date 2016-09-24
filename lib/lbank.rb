@@ -1,14 +1,16 @@
 require 'lbank/version'
 require 'lbank/memory_cache'
-require 'open-uri'
-require 'csv'
 require 'active_support/time'
+require 'faraday'
+require 'faraday_middleware'
+require 'bigdecimal'
 
 module Lbank
-
-  BASE_CURRENCY = 'LTL'
-  TIMEZONE      = 'Europe/Vilnius'
-  SOURCE        = 'http://lbank.lt/exchange/Results.asp'
+  RATE_TYPE = 'LT'
+  TIMEZONE = 'Europe/Vilnius'
+  URL = 'http://www.lb.lt/webservices/FxRates/FxRates.asmx/getFxRates'
+  LTL = 'LTL'
+  LTL_RATE = BigDecimal('3.45280')
 
   module_function
 
@@ -16,37 +18,47 @@ module Lbank
     @cache ||= MemoryCache.new
   end
 
-  def currency_rates(time = nil)
-    time      ||= Time.now
-    bank_time = time.to_time.in_time_zone(TIMEZONE)
-    date      = [ bank_time.year, bank_time.month, bank_time.day ]
+  def cache=(store)
+    @cache = store
+  end
 
+  def currency_rates(time = nil)
+    time ||= Time.now
+    bank_time = time.to_time.in_time_zone(TIMEZONE)
+    date = bank_time.strftime('%Y-%m-%d')
 
     cache.fetch(cache_key(date)) do
-      url   = "#{SOURCE}?Y=%i&M=%i&D=%i&S=csv" % date
-      rates = {}
+      response = connection.post(URL, tp: RATE_TYPE, dt: date)
+      fx_rates = response.body['FxRates']['FxRate']
 
-      data  = open(url).read
+      rates = { fx_rates[0]['CcyAmt'][0]['Ccy'] => 1 }
+      rates[LTL] ||= LTL_RATE
 
-      CSV.parse(data).each do |row|
-        rates[row[1]] = row[2].to_i / row[3].to_f
+      fx_rates.each_with_object(rates) do |rate, result|
+        base, foreign = rate['CcyAmt']
+        result[foreign['Ccy']] = BigDecimal(foreign['Amt']) / BigDecimal(base['Amt'])
       end
-
-      rates[BASE_CURRENCY] = 1.0
-      rates
     end
   end
 
-  def convert_currency(amount, from_currency, to_currency,  date = nil)
-    rates     = self.currency_rates(date)
-
+  def convert_currency(amount, from_currency, to_currency, date = nil)
+    rates = currency_rates(date)
     from_rate = rates[from_currency.to_s]
-    to_rate   = rates[to_currency.to_s]
+    to_rate = rates[to_currency.to_s]
 
     amount / from_rate * to_rate
   end
 
   def cache_key(date)
-    "lbank-#{date.join('-')}"
+    "lbank-#{date}"
+  end
+
+  def connection
+    @connection ||= Faraday.new do |builder|
+      builder.request :url_encoded
+      builder.response :raise_error
+      builder.response :xml, content_type: /\bxml$/
+      builder.adapter Faraday.default_adapter
+    end
   end
 end

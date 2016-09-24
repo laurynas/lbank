@@ -9,13 +9,13 @@ describe Lbank do
 
   describe '#convert_currency' do
     it 'converts currency' do
-      expect(subject.convert_currency(10, 'LTL', 'EUR')).to be > 0
+      expect(subject.convert_currency(10, 'USD', 'EUR')).to be > 0
+      expect(subject.convert_currency(10, 'EUR', 'LTL')).to eq 34.528
 
       date = Date.new(2012, 8, 4)
 
-      expect(round(subject.convert_currency(10, 'LTL', 'EUR', date))).to eq 2.90
-      expect(round(subject.convert_currency(10, 'LTL', 'USD', date))).to eq 3.55
-      expect(round(subject.convert_currency(100, 'RUB', 'LTL', date))).to eq 8.68
+      expect(subject.convert_currency(10, 'EUR', 'LTL')).to eq 34.528
+      expect(round(subject.convert_currency(1, 'USD', 'EUR', date))).to eq 0.82
       expect(round(subject.convert_currency(100, 'RUB', 'USD', date))).to eq 3.08
     end
   end
