@@ -1,6 +1,8 @@
 # Lbank
 
-[![Build Status](https://secure.travis-ci.org/laurynas/lbank.png)](http://travis-ci.org/laurynas/lbank)
+[![Gem](https://img.shields.io/gem/v/lbank.svg)](https://rubygems.org/gems/lbank)
+[![Build Status](https://github.com/laurynas/lbank/actions/workflows/main.yml/badge.svg)](https://github.com/laurynas/lbank/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 Fetches currency rates from Lithuanian Central Bank website http://lbank.lt.
 Does currency conversion.
