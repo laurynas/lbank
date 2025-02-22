@@ -6,12 +6,8 @@ jobs:
     strategy:
       matrix:
         ruby-version:
-          - 2.0
-          - 2.7
           - 3.0
           - 3.4
-          - ruby-head
-          - jruby-head
     name: Ruby ${{ matrix.ruby-version }} sample
     steps:
       - uses: actions/checkout@v4
