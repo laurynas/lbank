@@ -1,5 +1,6 @@
 require 'lbank/version'
 require 'lbank/memory_cache'
+require 'lbank/errors'
 require 'active_support/time'
 require 'faraday'
 require 'faraday_middleware'
@@ -29,6 +30,10 @@ module Lbank
 
     cache.fetch(cache_key(date)) do
       response = connection.post(URL, tp: RATE_TYPE, dt: date)
+      error = response.body['FxRates']['OprlErr']
+
+      raise ResponseError.new(error['Desc']) if error
+
       fx_rates = response.body['FxRates']['FxRate']
 
       rates = { fx_rates[0]['CcyAmt'][0]['Ccy'] => 1 }
@@ -41,8 +46,8 @@ module Lbank
     end
   end
 
-  def convert_currency(amount, from_currency, to_currency, date = nil)
-    rates = currency_rates(date)
+  def convert_currency(amount, from_currency, to_currency, time = nil)
+    rates = currency_rates(time)
     from_rate = rates[from_currency.to_s]
     to_rate = rates[to_currency.to_s]
 
