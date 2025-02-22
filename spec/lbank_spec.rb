@@ -15,14 +15,8 @@ describe Lbank do
       date = Date.new(2012, 8, 4)
 
       expect(subject.convert_currency(10, 'EUR', 'LTL')).to eq 34.528
-      expect(round(subject.convert_currency(1, 'USD', 'EUR', date))).to eq 0.82
-      expect(round(subject.convert_currency(100, 'RUB', 'USD', date))).to eq 3.08
+      expect(subject.convert_currency(1, 'USD', 'EUR', date).round(2)).to eq 0.82
+      expect(subject.convert_currency(100, 'RUB', 'USD', date).round(2)).to eq 3.08
     end
-  end
-
-  private
-
-  def round(number, precision = 2)
-    ("%.#{precision}f" % number).to_f
   end
 end
