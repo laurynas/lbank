@@ -2,9 +2,19 @@ require 'spec_helper'
 
 describe Lbank do
   describe '#currency_rates' do
-    subject { described_class.currency_rates }
+    subject { described_class.currency_rates(time) }
+
+    let(:time) {}
 
     its(['USD']) { is_expected.to be > 0 }
+
+    context 'when invalid time' do
+      let(:time) { Time.now + 1.week }
+
+      it 'raises error' do
+        expect { subject }.to raise_error(Lbank::ResponseError, /No data/)
+      end
+    end
   end
 
   describe '#convert_currency' do
