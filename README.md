@@ -4,7 +4,7 @@
 [![Build Status](https://github.com/laurynas/lbank/actions/workflows/main.yml/badge.svg)](https://github.com/laurynas/lbank/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Fetches currency rates from Lithuanian Central Bank website http://lbank.lt.
+Fetches currency rates from Lithuanian Central Bank website https://lb.lt.
 Does currency conversion.
 Supports historic currency rates.
 
