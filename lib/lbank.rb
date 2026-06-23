@@ -3,7 +3,8 @@ require 'lbank/memory_cache'
 require 'lbank/errors'
 require 'active_support/time'
 require 'faraday'
-require 'faraday_middleware'
+require 'faraday/net_http'
+require 'faraday/xml'
 require 'bigdecimal'
 
 module Lbank

@@ -15,10 +15,10 @@ Gem::Specification.new do |gem|
   gem.require_paths = ['lib']
   gem.version       = Lbank::VERSION
 
-  gem.add_dependency 'faraday'
-  gem.add_dependency 'faraday_middleware'
+  gem.add_dependency 'faraday', '>= 2.0', '< 3'
+  gem.add_dependency 'faraday-xml'
+  gem.add_dependency 'faraday-net_http'
   gem.add_dependency 'activesupport'
-  gem.add_dependency 'multi_xml'
 
   gem.add_development_dependency 'rspec', '~> 3.5'
   gem.add_development_dependency 'rspec-its', '~> 1.2'
