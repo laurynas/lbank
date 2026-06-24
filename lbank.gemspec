@@ -14,11 +14,14 @@ Gem::Specification.new do |gem|
   gem.name          = 'lbank'
   gem.require_paths = ['lib']
   gem.version       = Lbank::VERSION
+  gem.required_ruby_version = '>= 3.0'
 
-  gem.add_dependency 'faraday'
-  gem.add_dependency 'faraday_middleware'
-  gem.add_dependency 'activesupport'
+  gem.add_dependency 'faraday', '>= 2.0', '< 3'
+  gem.add_dependency 'faraday-xml'
+  gem.add_dependency 'faraday-net_http'
+  gem.add_dependency 'tzinfo'
   gem.add_dependency 'multi_xml'
+  gem.add_dependency 'rexml'
 
   gem.add_development_dependency 'rspec', '~> 3.5'
   gem.add_development_dependency 'rspec-its', '~> 1.2'

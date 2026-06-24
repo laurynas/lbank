@@ -8,6 +8,7 @@ jobs:
         ruby-version:
           - 3.0
           - 3.4
+          - 4.0
     name: Ruby ${{ matrix.ruby-version }} sample
     steps:
       - uses: actions/checkout@v7

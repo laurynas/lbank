@@ -1,9 +1,11 @@
 require 'lbank/version'
 require 'lbank/memory_cache'
 require 'lbank/errors'
-require 'active_support/time'
+require 'date'
+require 'tzinfo'
 require 'faraday'
-require 'faraday_middleware'
+require 'faraday/net_http'
+require 'faraday/xml'
 require 'bigdecimal'
 
 module Lbank
@@ -24,9 +26,7 @@ module Lbank
   end
 
   def currency_rates(time = nil)
-    time ||= Time.now
-    bank_time = time.to_time.in_time_zone(TIMEZONE)
-    date = bank_time.strftime('%Y-%m-%d')
+    date = bank_date(time || Time.now)
 
     cache.fetch(cache_key(date)) do
       response = connection.post(URL, tp: RATE_TYPE, dt: date)
@@ -56,6 +56,15 @@ module Lbank
 
   def cache_key(date)
     "lbank-#{date}"
+  end
+
+  def bank_date(time)
+    if time.is_a?(Date) && !time.is_a?(DateTime)
+      time.strftime('%Y-%m-%d')
+    else
+      local_time = TZInfo::Timezone.get(TIMEZONE).utc_to_local(time.to_time.utc)
+      local_time.strftime('%Y-%m-%d')
+    end
   end
 
   def connection
