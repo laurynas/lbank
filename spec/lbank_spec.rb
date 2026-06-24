@@ -9,7 +9,7 @@ describe Lbank do
     its(['USD']) { is_expected.to be > 0 }
 
     context 'when invalid time' do
-      let(:date) { Time.now + 1.week }
+      let(:date) { Time.now + 7 * 24 * 60 * 60 }
 
       it 'raises error' do
         expect { subject }.to raise_error(Lbank::ResponseError, /No data/)

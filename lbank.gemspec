@@ -18,7 +18,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'faraday', '>= 2.0', '< 3'
   gem.add_dependency 'faraday-xml'
   gem.add_dependency 'faraday-net_http'
-  gem.add_dependency 'activesupport'
+  gem.add_dependency 'tzinfo'
+  gem.add_dependency 'multi_xml'
   gem.add_dependency 'rexml'
 
   gem.add_development_dependency 'rspec', '~> 3.5'
