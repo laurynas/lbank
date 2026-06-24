@@ -14,6 +14,7 @@ Gem::Specification.new do |gem|
   gem.name          = 'lbank'
   gem.require_paths = ['lib']
   gem.version       = Lbank::VERSION
+  gem.required_ruby_version = '>= 3.0'
 
   gem.add_dependency 'faraday', '>= 2.0', '< 3'
   gem.add_dependency 'faraday-xml'
